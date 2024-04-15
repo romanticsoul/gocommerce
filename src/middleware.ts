@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from './auth'
 
-export const runtime = 'experimental-edge'
+// export const runtime = 'experimental-edge'
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
