@@ -1,41 +1,29 @@
 import { NextResponse } from 'next/server'
 import { auth } from './auth'
 
+export const runtime = 'experimental-edge'
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
 
-export const runtime = 'experimental-edge'
-
 export default auth(req => {
   const url = req.nextUrl
-  let hostname = req.headers
-    .get('host')!
-    .replace(
-      '.gocommerce.local:3000',
-      `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-    )
-
-  // special case for Vercel preview deployment URLs
-  if (
-    hostname.includes('---') &&
-    hostname.endsWith(`.${process.env.NEXT_PUBLIC_VERCEL_DEPLOYMENT_SUFFIX}`)
-  ) {
-    hostname = `${hostname.split('---')[0]}.${
-      process.env.NEXT_PUBLIC_ROOT_DOMAIN
-    }`
-  }
+  const hostname = req.headers.get('host')!
+  const subdomain = hostname.replace(`${url.host}`, '').replace('.', '') || null
+  console.log(subdomain)
 
   const searchParams = url.searchParams.toString()
-  // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ''
   }`
 
-  if (
-    hostname === 'gocommerce.local:3000' ||
-    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
-  ) {
+  if (subdomain === 'auth') {
+    return NextResponse.rewrite(
+      new URL(`/auth${path === '/' ? '' : path}`, req.url),
+    )
+  }
+
+  if (!subdomain) {
     return NextResponse.rewrite(
       new URL(`/home${path === '/' ? '' : path}`, req.url),
     )

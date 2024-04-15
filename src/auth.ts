@@ -8,13 +8,7 @@ const neon = new Pool({ connectionString: process.env.DATABASE_URL })
 const adapter = new PrismaNeon(neon)
 const prisma = new PrismaClient({ adapter })
 
-export const {
-  handlers,
-  signIn,
-  signOut,
-  auth,
-  unstable_update: update,
-} = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [],
   session: {
