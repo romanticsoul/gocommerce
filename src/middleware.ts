@@ -12,12 +12,9 @@ export default auth(req => {
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers.get('host')!
-  // const subdomain = hostname.split('.')[0]
-  const subdomain = hostname.replace(`${url.host}`, '').replace('.', '') || null
+  const subdomain = hostname.split('.')[0]
 
-  console.log(subdomain)
-
-  const searchParams = req.nextUrl.searchParams.toString()
+  const searchParams = url.searchParams.toString()
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ''
@@ -26,22 +23,15 @@ export default auth(req => {
   if (subdomain == `auth`) {
     const session = req.auth
     if (!session) {
-      return NextResponse.rewrite(
-        new URL(`/auth${path === '/' ? '' : path}`, req.url),
-      )
+      return NextResponse.rewrite(new URL(`/auth${path}`, req.url))
     } else if (session) {
       return NextResponse.redirect(new URL('/', req.url))
     }
   }
 
   // rewrite root application to `/home` folder
-  if (
-    hostname === 'gocommerce.local:3000' ||
-    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
-  ) {
-    return NextResponse.rewrite(
-      new URL(`/home${path === '/' ? '' : path}`, req.url),
-    )
+  if (subdomain === url.hostname.split('.')[0]) {
+    return NextResponse.rewrite(new URL(`/home${path}`, req.url))
   }
 
   // rewrite everything else to `/[domain]/[slug] dynamic route
