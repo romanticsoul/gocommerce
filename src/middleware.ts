@@ -11,14 +11,10 @@ export default auth(req => {
   const url = req.nextUrl
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
-  const hostname = req.headers
-    .get('host')!
-    .replace(
-      '.gocommerce.local:3000',
-      `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-    )
-
+  const hostname = req.headers.get('host')!
   const subdomain = hostname.split('.')[0]
+
+  console.log(hostname)
 
   const searchParams = req.nextUrl.searchParams.toString()
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
