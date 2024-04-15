@@ -8,28 +8,27 @@ export const config = {
 
 export default auth(req => {
   const url = req.nextUrl
+
   const hostname = req.headers.get('host')!
   const subdomain = hostname.replace(`${url.host}`, '').replace('.', '') || null
-  console.log(subdomain)
 
   const searchParams = url.searchParams.toString()
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ''
   }`
 
-  if (subdomain === 'auth') {
-    return NextResponse.rewrite(
-      new URL(`/auth${path === '/' ? '' : path}`, req.url),
-    )
+  switch (subdomain) {
+    case 'auth':
+      return NextResponse.rewrite(
+        new URL(`/auth${path === '/' ? '' : path}`, req.url),
+      )
+    case null:
+      return NextResponse.rewrite(
+        new URL(`/home${path === '/' ? '' : path}`, req.url),
+      )
+    default:
+      return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url))
   }
-
-  if (!subdomain) {
-    return NextResponse.rewrite(
-      new URL(`/home${path === '/' ? '' : path}`, req.url),
-    )
-  }
-
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url))
 })
 
 // export default async function middleware(req: NextRequest) {
