@@ -12,9 +12,10 @@ export default auth(req => {
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers.get('host')!
-  const subdomain = hostname.split('.')[0]
+  // const subdomain = hostname.split('.')[0]
+  const subdomain = hostname.replace(`${url.host}`, '').replace('.', '') || null
 
-  console.log(hostname)
+  console.log(subdomain)
 
   const searchParams = req.nextUrl.searchParams.toString()
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
