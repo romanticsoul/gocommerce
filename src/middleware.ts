@@ -30,7 +30,7 @@ export default auth(req => {
   }
 
   // rewrite root application to `/home` folder
-  if (subdomain === url.hostname.split('.')[0]) {
+  if (subdomain === 'gocommerce') {
     return NextResponse.rewrite(new URL(`/home${path}`, req.url))
   }
 
