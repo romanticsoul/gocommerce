@@ -3,7 +3,7 @@ import { auth } from './auth'
 
 export const runtime = 'experimental-edge'
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)'],
 }
 
 export default auth(req => {
@@ -13,9 +13,7 @@ export default auth(req => {
     (hostname.match(/^(.*?)\.(?:[^.]+\.[^.]+)$/) || [])[1] || null
 
   const searchParams = url.searchParams.toString()
-  const path = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ''
-  }`
+  const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ''}`
 
   if (!subdomain) {
     return NextResponse.rewrite(new URL(`/home${path}`, req.url))

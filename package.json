@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "dev": "next lint && next dev -H gocommerce.local",
+    "dev": "next dev -H gocommerce.bar",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/theme-provider'
 import { Inter as FontSans } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import './globals.css'
@@ -20,7 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" suppressHydrationWarning>
+      <head />
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',
